@@ -1,0 +1,14 @@
+# Ignorar archivos temporales de R
+
+.Rhistory
+.RData
+.Rapp.history
+
+# Ignorar la carpeta de configuración de RStudio
+
+.Rproj.user/
+
+# Ignorar archivos de sistema
+
+.DS_Store
+Thumbs.db
