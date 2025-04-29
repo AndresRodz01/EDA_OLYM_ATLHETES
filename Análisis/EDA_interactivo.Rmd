@@ -40,3 +40,4 @@ plot_ly(top_medals, x = ~medals, y = ~reorder(Team, medals), type = 'bar', orien
 
 ```
 
+Pruebas
