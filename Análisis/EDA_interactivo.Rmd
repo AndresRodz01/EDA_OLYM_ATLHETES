@@ -16,28 +16,157 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(tidyverse)
 library(plotly)
 library(ggplot2)
+library(dplyr)
 
-athletes <- read_csv("../Dataset/athlete_events.csv")
+atletas <- read_csv("../Dataset/athlete_events.csv")
 
 ```
 
-Este análisis exploratorio busca revelar patrones y curiosidades históricas del rendimiento olímpico a lo largo de más de 100 años de historia. Para ello, utilizamos el dataset de Kaggle: 120 Years of Olympic History: Athletes and Results.
+<br>
 
-EJEMPLO
+<div style="text-align: center;">
+  <img src="../Imágenes/Anillos.png" alt="Logo olímpico" width="300px" />
+</div>
 
-```{r cachondini, echo=TRUE}
-top_medals <- athletes %>%
+<br>
+
+## Introducción
+
+Los  **Juegos Olímpicos ** modernos han sido uno de los eventos deportivos más importantes del mundo desde los años 1900. A lo largo de más de un siglo, millones de atletas han representado a sus países en cientos de disciplinas, dejando una huella histórica que refleja no solo la evolución del deporte, sino también los cambios sociales, políticos y culturales del mundo.
+
+En este proyecto realizaremos un  **Análisis Exploratorio de Datos (EDA)** utilizando el conjunto de datos "120 years of Olympic history: athletes and results", disponible en Kaggle. Este dataset contiene información detallada sobre más de 120 años de competencias olímpicas, incluyendo variables como el nombre del atleta, edad, sexo, país, deporte, eventos, medallas obtenidas y más.
+
+El  **objetivo principal** de este análisis es explorar las características más relevantes del conjunto de datos a través de visualizaciones de distinto tipo, con un enfoque en descubrir patrones, tendencias y aspectos interesantes que nos ayuden a entender mejor la historia olímpica desde una perspectiva cuantitativa.
+
+## Análisis univariado
+
+En esta sección, exploraremos algunas de las variables más interesantes del conjunto de datos a través de gráficos univariable. Estos gráficos nos permitirán comprender mejor la distribución de los datos en términos de **atributos individuales**, sin considerar las relaciones entre variables. Los tres gráficos que se presentarán a continuación destacan patrones significativos y tendencias en aspectos clave de los atletas y deportes olímpicos.
+
+Los gráficos a continuación incluyen:
+
+1. **Frecuencia** de participación por deporte: Exploraremos los deportes más populares en los cuales los atletas han competido.
+
+2. Distribución de **edades** de los atletas: Examinaremos la distribución de edades, identificando si existen diferencias notorias.
+
+3. Distribución del **peso** de los atletas: Visualizaremos en qué peso se agrupan los atletas olímpicos.
+
+### Frecuencia de participación por deporte
+
+```{r unidimensional1, echo=FALSE}
+
+deportes_data <- atletas %>%
+  filter(!is.na(Sport)) %>%
+  count(Sport, name = "Participaciones") %>%
+  arrange(desc(Participaciones)) %>%
+  top_n(25, Participaciones)  
+
+grafico_deportes <- ggplot(deportes_data, aes(x = reorder(Sport, Participaciones), y = Participaciones, fill = Sport)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(x = "", y = "") +
+  theme_minimal()
+
+plotly::ggplotly(grafico_deportes)
+
+```
+
+Podemos observar que disciplinas como el atletismo, la gimnasia y la natación se destacan ampliamente, liderando el número de eventos y atletas participantes. Esta alta frecuencia se debe a que estos deportes agrupan múltiples pruebas (carreras, saltos, estilos de nado, tipo de gimnasia, etc.) y cuentan con una fuerte tradición con los Juegos desde sus inicios.
+
+También destacan deportes como el ciclismo, la esgrima y el tiro, que si bien no tienen tantas disciplinas internas como el atletismo, han mantenido una presencia sostenida en numerosas ediciones de los Juegos.
+
+Esta distribución refleja tanto la popularidad histórica de ciertos deportes como la estructura del programa olímpico, que favorece a disciplinas con múltiples eventos y amplio acceso para atletas de distintas categorías.
+
+### Distribución de edades de los atletas
+
+```{r unidimensional2, echo=FALSE}
+ 
+edades_data <- atletas %>%
+  filter(!is.na(Age), Age > 0, Age < 100)
+
+grafico_edades <- ggplot(edades_data, aes(x = Age)) +
+  geom_histogram(bins = 30, fill = "#69b3a2", color = "black", alpha = 0.7) +
+  labs(title = "", x = "", y = "") +
+  theme_minimal()
+
+plotly::ggplotly(grafico_edades)
+
+```
+
+En el gráfico anterior se visualiza la distribución de edades de los atletas olímpicos. La mayoría de los participantes está entre los 20 y 30 años, lo cual es esperable considerando que muchas disciplinas deportivas exigen un alto rendimiento físico, propio de esta etapa de la vida. También se observan algunas participaciones fuera de ese rango, aunque en menor proporción, lo que sugiere la existencia de deportes donde los atletas pueden competir a edades más tempranas o avanzadas, lo que nos indica que hay deportes olímpicos donde el rendimeinto físico no es lo más importante.
+
+### Distribución del peso de los atletas
+
+```{r unidimensional3, echo=FALSE}
+
+peso_data <- atletas %>%
+  filter(!is.na(Weight) & Weight > 0)
+
+grafico_densidad_peso <- ggplot(peso_data, aes(x = Weight)) +
+  geom_density(fill = "#D95F02", alpha = 0.7) +
+  labs(x = "Peso (kg)", y = "Densidad") +
+  theme_minimal()
+
+plotly::ggplotly(grafico_densidad_peso)
+
+```
+
+El gráfico anterior muestra la distribución del peso de los atletas a lo largo de la historia olímpica. La curva presenta un pico pronunciado entre los 60 y 80 kg, lo que indica que una gran parte de los deportistas se concentra en ese rango. Sin embargo, también se observa una dispersión considerable hacia ambos extremos, reflejando la diversidad de requerimientos físicos según la disciplina deportiva. Lo anterior denota que existe una gran diversidad en los deportes y en los requerimientos de cada uno.
+
+## Análisis bivariado
+
+En esta sección, examinaremos relaciones entre **pares** de variables para descubrir patrones, correlaciones o diferencias relevantes dentro del conjunto de datos. El análisis bivariado nos permite entender cómo se comportan dos variables en conjunto, que clave para identificar tendencias más profundas y contextos específicos.
+
+Los análisis bivariados seleccionados incluyen:
+
+1. Participación por **sexo** a lo largo del **tiempo**: Observaremos cómo ha cambiado la cantidad de atletas hombres y mujeres a lo largo de los años.
+
+2. Cantidad de **medallas** ganadas por **país**: Destacaremos los países (NOC) que más medallas ganaron en toda la historia.
+
+### Participación por sexo a lo largo del tiempo
+
+```{r bidimensional1, echo=FALSE}
+
+sexo_tiempo <- atletas %>%
+  filter(!is.na(Sex), !is.na(Year)) %>%
+  distinct(ID, Year, Sex) %>% 
+  count(Year, Sex, name = "Cantidad")
+
+grafico_lineas <- ggplot(sexo_tiempo, aes(x = Year, y = Cantidad, color = Sex)) +
+  geom_line(size = 1.2) +
+  labs(x = "", y = "") +
+  scale_color_manual(values = c("F" = "#FF69B4", "M" = "#1E90FF")) +
+  theme_minimal()
+
+plotly::ggplotly(grafico_lineas)
+
+```
+
+En el gráfico anterior se aprecia una marcada diferencia entre la participación masculina y femenina en los Juegos Olímpicos. En las primeras ediciones, la presencia de mujeres fue casi inexistente; sin embargo, a partir de la segunda mitad del siglo XX, su participación creció de forma significativa, reflejando transformaciones sociales y culturales que favorecieron una mayor inclusión de las atletas en el evento.
+
+En contraste, la participación masculina, aunque históricamente mayoritaria, ha mostrado un crecimiento más estable y lineal. No obstante, en las últimas décadas, la diferencia entre ambos sexos se ha ido reduciendo progresivamente.
+
+Este comportamiento sugiere una convergencia en la representación de ambos sexos, particularmente en los Juegos Olímpicos más recientes, donde se ha promovido activamente la igualdad de oportunidades y se han añadido eventos exclusivamente femeninos, masculinos o mixtos.
+
+### Cantidad de medallas ganadas por país
+
+```{r bidimensional2, echo=FALSE}
+
+medallas_por_noc <- atletas %>%
   filter(!is.na(Medal)) %>%
-  group_by(Team) %>%
-  summarise(medals = n()) %>%
-  arrange(desc(medals)) %>%
-  slice(1:10)
+  count(NOC, name = "Medallas") %>%
+  arrange(desc(Medallas)) %>%
+  top_n(20, Medallas)  
 
-plot_ly(top_medals, x = ~medals, y = ~reorder(Team, medals), type = 'bar', orientation = 'h',
-        marker = list(color = 'gold')) %>%
-  layout(title = "Top 10 países con más medallas",
-         xaxis = list(title = "Medallas"), yaxis = list(title = "País"))
+grafico_medallas <- ggplot(medallas_por_noc, aes(x = reorder(NOC, Medallas), y = Medallas, fill = NOC)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(x = "NOC (País)", y = "Cantidad de medallas") +
+  theme_minimal()
+
+plotly::ggplotly(grafico_medallas)
 
 ```
 
-Pruebas #2, TOMA
+Se pueden ver los 20 Comités Olímpicos Nacionales (NOC) con mayor cantidad de medallas obtenidas a lo largo de la historia de los Juegos. Se nota que hay una marcada concentración de medallas en un pequeño grupo de países, destacando especialmente potencias deportivas como Estados Unidos, Rusia, Alemania o Reino Unido.
+
+Esta concentración refleja no solo el alto rendimiento de estos países en múltiples disciplinas, sino también factores como la inversión en infraestructura deportiva, el desarrollo de programas de alto rendimiento y la participación constante en las ediciones olímpicas. De lo anterior se puede concluir que una de las razones por las cuales las grandes potencias se mantienen con una gran cantidad de medallas debido en gran parte debido a la capacidad de inversión que tienen.
