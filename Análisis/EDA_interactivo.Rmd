@@ -32,13 +32,39 @@ atletas <- read_csv("../Dataset/athlete_events.csv")
 
 ## Introducción
 
-Los  **Juegos Olímpicos ** modernos han sido uno de los eventos deportivos más importantes del mundo desde los años 1900. A lo largo de más de un siglo, millones de atletas han representado a sus países en cientos de disciplinas, dejando una huella histórica que refleja no solo la evolución del deporte, sino también los cambios sociales, políticos y culturales del mundo.
+Los **Juegos Olímpicos** modernos representan uno de los eventos deportivos más influyentes y de mayor relevancia a nivel mundial. Desde su instauración a finales del siglo XIX y su consolidación a partir de 1900, han reunido a millones de atletas provenientes de todo el mundo, quienes compiten en una amplia variedad de disciplinas. A lo largo de las décadas, los Juegos Olímpicos no solo han sido un escenario para la excelencia deportiva, sino también un reflejo de importantes transformaciones sociales, culturales y políticas a nivel global.
 
-En este proyecto realizaremos un  **Análisis Exploratorio de Datos (EDA)** utilizando el conjunto de datos "120 years of Olympic history: athletes and results", disponible en Kaggle. Este dataset contiene información detallada sobre más de 120 años de competencias olímpicas, incluyendo variables como el nombre del atleta, edad, sexo, país, deporte, eventos, medallas obtenidas y más.
+Este evento ha evolucionado significativamente con el tiempo, incorporando nuevos deportes, promoviendo la equidad de género y adaptándose a los cambios tecnológicos. Todo este proceso ha quedado registrado en diversas fuentes de datos que hoy en día permiten realizar estudios analíticos sobre la historia olímpica.
 
-El  **objetivo principal** de este análisis es explorar las características más relevantes del conjunto de datos a través de visualizaciones de distinto tipo, con un enfoque en descubrir patrones, tendencias y aspectos interesantes que nos ayuden a entender mejor la historia olímpica desde una perspectiva cuantitativa.
+## Descripción del problema
 
-## Análisis univariado
+A pesar de la riqueza histórica de los Juegos Olímpicos, muchos de los factores que determinan el éxito de los atletas aún no han sido explorados de forma profunda desde una perspectiva cuantitativa. La disponibilidad de datos detallados sobre los atletas, disciplinas, resultados y eventos ofrece una oportunidad valiosa para investigar qué características influyen en la obtención de medallas y el rendimiento olímpico.
+
+Este proyecto se enfoca en la realización de un Análisis Exploratorio de Datos (EDA) con el objetivo de identificar los principales patrones, distribuciones y relaciones entre variables que puedan estar asociadas con el éxito de los atletas. A través de visualizaciones interactivas, se buscará facilitar la interpretación de los datos y descubrir tendencias significativas que ayuden a comprender mejor el perfil de los atletas más exitosos en los Juegos Olímpicos.
+
+## Definición de fuente de datos
+
+El análisis se basa en el conjunto de datos titulado “120 years of Olympic history: athletes and results”, el cual está disponible en la plataforma Kaggle. Este dataset contiene información detallada sobre más de 120 años de historia olímpica, incluyendo las siguientes variables:
+
+* ID - Unique number for each athlete
+* Name - Athlete's name
+* Sex - M or F
+* Age - Integer
+* Height - In centimeters
+* Weight - In kilograms
+* Team - Team name
+* NOC - National Olympic Committee 3-letter code
+* Games - Year and season
+* Year - Integer
+* Season - Summer or Winter
+* City - Host city
+* Sport - Sport
+* Event - Event
+* Medal - Gold, Silver, Bronze, or NA
+
+## Visualizaciones y análisis
+
+### Análisis univariado
 
 En esta sección, exploraremos algunas de las variables más interesantes del conjunto de datos a través de gráficos univariable. Estos gráficos nos permitirán comprender mejor la distribución de los datos en términos de **atributos individuales**, sin considerar las relaciones entre variables. Los tres gráficos que se presentarán a continuación destacan patrones significativos y tendencias en aspectos clave de los atletas y deportes olímpicos.
 
@@ -50,7 +76,7 @@ Los gráficos a continuación incluyen:
 
 3. Distribución del **peso** de los atletas: Visualizaremos en qué peso se agrupan los atletas olímpicos.
 
-### Frecuencia de participación por deporte
+#### Frecuencia de participación por deporte
 
 ```{r unidimensional1, echo=FALSE}
 
@@ -76,7 +102,7 @@ También destacan deportes como el ciclismo, la esgrima y el tiro, que si bien n
 
 Esta distribución refleja tanto la popularidad histórica de ciertos deportes como la estructura del programa olímpico, que favorece a disciplinas con múltiples eventos y amplio acceso para atletas de distintas categorías.
 
-### Distribución de edades de los atletas
+#### Distribución de edades de los atletas
 
 ```{r unidimensional2, echo=FALSE}
  
@@ -94,7 +120,7 @@ plotly::ggplotly(grafico_edades)
 
 En el gráfico anterior se visualiza la distribución de edades de los atletas olímpicos. La mayoría de los participantes está entre los 20 y 30 años, lo cual es esperable considerando que muchas disciplinas deportivas exigen un alto rendimiento físico, propio de esta etapa de la vida. También se observan algunas participaciones fuera de ese rango, aunque en menor proporción, lo que sugiere la existencia de deportes donde los atletas pueden competir a edades más tempranas o avanzadas, lo que nos indica que hay deportes olímpicos donde el rendimeinto físico no es lo más importante.
 
-### Distribución del peso de los atletas
+#### Distribución del peso de los atletas
 
 ```{r unidimensional3, echo=FALSE}
 
@@ -112,7 +138,7 @@ plotly::ggplotly(grafico_densidad_peso)
 
 El gráfico anterior muestra la distribución del peso de los atletas a lo largo de la historia olímpica. La curva presenta un pico pronunciado entre los 60 y 80 kg, lo que indica que una gran parte de los deportistas se concentra en ese rango. Sin embargo, también se observa una dispersión considerable hacia ambos extremos, reflejando la diversidad de requerimientos físicos según la disciplina deportiva. Lo anterior denota que existe una gran diversidad en los deportes y en los requerimientos de cada uno.
 
-## Análisis bivariado
+### Análisis bivariado
 
 En esta sección, examinaremos relaciones entre **pares** de variables para descubrir patrones, correlaciones o diferencias relevantes dentro del conjunto de datos. El análisis bivariado nos permite entender cómo se comportan dos variables en conjunto, que clave para identificar tendencias más profundas y contextos específicos.
 
@@ -122,7 +148,7 @@ Los análisis bivariados seleccionados incluyen:
 
 2. Cantidad de **medallas** ganadas por **país**: Destacaremos los países (NOC) que más medallas ganaron en toda la historia.
 
-### Participación por sexo a lo largo del tiempo
+#### Participación por sexo a lo largo del tiempo
 
 ```{r bidimensional1, echo=FALSE}
 
@@ -147,7 +173,7 @@ En contraste, la participación masculina, aunque históricamente mayoritaria, h
 
 Este comportamiento sugiere una convergencia en la representación de ambos sexos, particularmente en los Juegos Olímpicos más recientes, donde se ha promovido activamente la igualdad de oportunidades y se han añadido eventos exclusivamente femeninos, masculinos o mixtos.
 
-### Cantidad de medallas ganadas por país
+#### Cantidad de medallas ganadas por país
 
 ```{r bidimensional2, echo=FALSE}
 
