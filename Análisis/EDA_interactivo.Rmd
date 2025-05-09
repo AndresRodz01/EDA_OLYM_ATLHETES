@@ -9,6 +9,7 @@ output:
     number_sections: true
 ---
 
+  
 ```{r setup, include=FALSE}
 
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -17,15 +18,16 @@ library(tidyverse)
 library(plotly)
 library(ggplot2)
 library(dplyr)
-
+library(patchwork)
 atletas <- read_csv("../Dataset/athlete_events.csv")
 
 ```
 
 <br>
-
-<div style="text-align: center;">
+  
+  <div style="text-align: center;">
   <img src="../Imágenes/Anillos.png" alt="Logo olímpico" width="300px" />
+<<<<<<< HEAD
 </div>
 
 <br>
@@ -33,6 +35,15 @@ atletas <- read_csv("../Dataset/athlete_events.csv")
 ## Introducción
 
 Los **Juegos Olímpicos** modernos representan uno de los eventos deportivos más influyentes y de mayor relevancia a nivel mundial. Desde su instauración a finales del siglo XIX y su consolidación a partir de 1900, han reunido a millones de atletas provenientes de todo el mundo, quienes compiten en una amplia variedad de disciplinas. A lo largo de las décadas, los Juegos Olímpicos no solo han sido un escenario para la excelencia deportiva, sino también un reflejo de importantes transformaciones sociales, culturales y políticas a nivel global.
+=======
+  </div>
+  
+  <br>
+  
+  ## Introducción
+  
+  Los  **Juegos Olímpicos ** modernos han sido uno de los eventos deportivos más importantes del mundo desde los años 1900. A lo largo de más de un siglo, millones de atletas han representado a sus países en cientos de disciplinas, dejando una huella histórica que refleja no solo la evolución del deporte, sino también los cambios sociales, políticos y culturales del mundo.
+>>>>>>> 5b2f25213bcf4042f75ad3e1cf5583dfd7cf7a73
 
 Este evento ha evolucionado significativamente con el tiempo, incorporando nuevos deportes, promoviendo la equidad de género y adaptándose a los cambios tecnológicos. Todo este proceso ha quedado registrado en diversas fuentes de datos que hoy en día permiten realizar estudios analíticos sobre la historia olímpica.
 
@@ -69,8 +80,8 @@ El análisis se basa en el conjunto de datos titulado “120 years of Olympic hi
 En esta sección, exploraremos algunas de las variables más interesantes del conjunto de datos a través de gráficos univariable. Estos gráficos nos permitirán comprender mejor la distribución de los datos en términos de **atributos individuales**, sin considerar las relaciones entre variables. Los tres gráficos que se presentarán a continuación destacan patrones significativos y tendencias en aspectos clave de los atletas y deportes olímpicos.
 
 Los gráficos a continuación incluyen:
-
-1. **Frecuencia** de participación por deporte: Exploraremos los deportes más populares en los cuales los atletas han competido.
+  
+  1. **Frecuencia** de participación por deporte: Exploraremos los deportes más populares en los cuales los atletas han competido.
 
 2. Distribución de **edades** de los atletas: Examinaremos la distribución de edades, identificando si existen diferencias notorias.
 
@@ -105,7 +116,7 @@ Esta distribución refleja tanto la popularidad histórica de ciertos deportes c
 #### Distribución de edades de los atletas
 
 ```{r unidimensional2, echo=FALSE}
- 
+
 edades_data <- atletas %>%
   filter(!is.na(Age), Age > 0, Age < 100)
 
@@ -143,8 +154,8 @@ El gráfico anterior muestra la distribución del peso de los atletas a lo largo
 En esta sección, examinaremos relaciones entre **pares** de variables para descubrir patrones, correlaciones o diferencias relevantes dentro del conjunto de datos. El análisis bivariado nos permite entender cómo se comportan dos variables en conjunto, que clave para identificar tendencias más profundas y contextos específicos.
 
 Los análisis bivariados seleccionados incluyen:
-
-1. Participación por **sexo** a lo largo del **tiempo**: Observaremos cómo ha cambiado la cantidad de atletas hombres y mujeres a lo largo de los años.
+  
+  1. Participación por **sexo** a lo largo del **tiempo**: Observaremos cómo ha cambiado la cantidad de atletas hombres y mujeres a lo largo de los años.
 
 2. Cantidad de **medallas** ganadas por **país**: Destacaremos los países (NOC) que más medallas ganaron en toda la historia.
 
@@ -196,3 +207,113 @@ plotly::ggplotly(grafico_medallas)
 Se pueden ver los 20 Comités Olímpicos Nacionales (NOC) con mayor cantidad de medallas obtenidas a lo largo de la historia de los Juegos. Se nota que hay una marcada concentración de medallas en un pequeño grupo de países, destacando especialmente potencias deportivas como Estados Unidos, Rusia, Alemania o Reino Unido.
 
 Esta concentración refleja no solo el alto rendimiento de estos países en múltiples disciplinas, sino también factores como la inversión en infraestructura deportiva, el desarrollo de programas de alto rendimiento y la participación constante en las ediciones olímpicas. De lo anterior se puede concluir que una de las razones por las cuales las grandes potencias se mantienen con una gran cantidad de medallas debido en gran parte debido a la capacidad de inversión que tienen.
+
+##Análisis Multidimensional 
+En esta sección se combinarán un conjunto de variables en una misma visualización, esto con el fin de observar patrones complejos. Esto puede ser de utilidad cuando se quiere ver cómo influyen varias características simultáneamente.
+
+Se analizará la distribución del peso, altura y edad de 500 atletas atletas según el género y deporte. Los deportes a analizar en este caso serán: Gimnasia, Atletismo y Natación.
+
+###Caraterísticas físicas por deporte
+```{r multidimensional, echo=FALSE}
+DatosMult <- atletas%>%
+  filter(!is.na(Age),!is.na(Height), !is.na(Weight), !is.na(Sex), Sport %in% c("Athletics", "Gymnastics", "Swimming"))%>%
+  slice_sample(n=500)
+
+grafico_multi <- ggplot(DatosMult, aes(x = Age, y = Weight, color = Sex, size = Height)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~Sport) +
+  labs(x = "Edad", y = "Peso (kg)", color = "Sexo", size="Altura (cm)") +
+  theme_minimal()
+
+plotly::ggplotly(grafico_multi)
+
+```
+
+Se observa que cada diciplina presenta algunos patrones peculiares, en gimnasia, la mayoria son atletas jóvenes y livianos, especialmente mujeres; en atletismo, la dispersión es amplia debido a la variedad de pruebas, en natación, los atletas se concentran entre los 18 y 30 años, con pesos moderadamente altos.
+
+La diferencia entre hombres y mujeres on consistentes en todos los deportes, los hombres tienden a tener un peso más alto y el rango de edad es mayor, mientras que las mujeres se concentran en un espacio más epecífico. Esto refleja las diferente exigencias que presenta cada deportey como influye en el físico de lo atletas.
+
+
+
+##Facetas
+Las facetas permiten dividir un gráfico en múltiples paneles según una variable categórica, facilitando la comparación entre subgrupos de datos. En este caso, se usó la variable NOC (país) para crear un panel por país, lo que permite analizar de forma clara y ordenada cómo se comportan las demás variables dentro de cada país, manteniendo el mismo tipo de visualización y escala.
+
+###Rango de edad por deporte
+
+```{r facetas_medallas, echo=FALSE}
+
+# Filtrar atletas con medalla y algunos países específicos para no saturar
+faceta_medallas <- atletas %>%
+  filter(!is.na(Medal), 
+         NOC %in% c("USA", "RUS", "CHN", "GBR", "GER")) %>%
+  group_by(Year, Medal, NOC) %>%
+  summarise(Atletas = n(), .groups = "drop")
+
+# Gráfico
+grafico_medallas_facetas <- ggplot(faceta_medallas, aes(x = Year, y = Atletas, fill = Medal)) +
+  geom_col(position = "stack") +
+  facet_wrap(~NOC) +
+  scale_fill_manual(values = c("Gold" = "#FFD700", "Silver" = "#C0C0C0", "Bronze" = "#cd7f32")) +
+  labs(x = "Año", y = "Cantidad de medallistas", fill = "Medalla") +
+  theme_minimal()
+
+plotly::ggplotly(grafico_medallas_facetas)
+
+```
+El gráfico muestra la cantidad de atletas que han ganado medallas a lo largo del tiempo en cinco países: Estados Unidos (USA), Rusia (RUS), China (CHN), Inglaterra (ENG) y Alemania (GER). Se evidencia un dominio claro de Estados Unidos, con una presencia constante y masiva de medallas en casi todas las ediciones. Rusia también muestra un alto desempeño, especialmente durante el periodo soviético, mientras que China emerge con fuerza a partir del año 2000. Inglaterra y Alemania presentan un rendimiento sólido pero más variable, con repuntes en ediciones específicas. Las facetas hacen evidente cómo ha evolucionado el protagonismo olímpico de cada país a lo largo del tiempo.
+
+##Imagen compuestada
+Un gráfico compuesto permite visualizar múltiples aspectos de un conjunto de datos al integrar varios gráficos individuales en una sola imagen. Esto facilita la comparación simultánea de diferentes variables y relaciones, haciendo más eficiente la exploración de patrones complejos. Al usar variables menos convencionales como el año, la medalla obtenida, el evento, y la estación de competencia, este tipo de gráfico revela dimensiones del comportamiento de los atletas que no serían evidentes en visualizaciones simples o aisladas.
+
+###-
+```{r compuesta, echo=FALSE}
+
+
+# Filtrado base
+base <- atletas %>%
+  filter(!is.na(Year), !is.na(Medal), !is.na(Event), !is.na(NOC), !is.na(Season))
+
+# Gráfico 1: Distribución de atletas por año
+g1 <- ggplot(base, aes(x = Year)) +
+  geom_histogram(binwidth = 4, fill = "#8da0cb", color = "black") +
+  labs(title = "Participaciones por Año", x = "Año", y = "Cantidad") +
+  theme_minimal()
+
+# Gráfico 2: Medallas por tipo
+g2 <- base %>%
+  filter(Medal != "NA") %>%
+  ggplot(aes(x = Medal, fill = Medal)) +
+  geom_bar() +
+  labs(title = "Distribución de Medallas", x = "Medalla", y = "Cantidad") +
+  scale_fill_manual(values = c("Gold" = "#ffd700", "Silver" = "#c0c0c0", "Bronze" = "#cd7f32")) +
+  theme_minimal()
+
+# Gráfico 3: Eventos más comunes
+top_eventos <- base %>%
+  count(Event, sort = TRUE) %>%
+  slice_max(n, n = 10)
+
+g3 <- ggplot(top_eventos, aes(x = reorder(Event, n), y = n)) +
+  geom_col(fill = "#fc8d62") +
+  coord_flip() +
+  labs(title = "Top 10 Eventos Olímpicos", x = "Evento", y = "Cantidad") +
+  theme_minimal()
+
+# Gráfico 4: Participaciones por estación
+g4 <- ggplot(base, aes(x = Season, fill = Season)) +
+  geom_bar() +
+  scale_fill_manual(values = c("Summer" = "#66c2a5", "Winter" = "#a6d854")) +
+  labs(title = "Temporada de los Juegos", x = "Estación", y = "Cantidad") +
+  theme_minimal()
+
+# Imagen compuesta
+p1 <- ggplotly(g1)
+p2 <- ggplotly(g2)
+p3 <- ggplotly(g3)
+p4 <- ggplotly(g4)
+
+# Combinar en una imagen compuesta
+subplot(p1, p2, p3, p4, nrows = 2, margin = 0.05, titleX = TRUE, titleY = TRUE)
+
+```
+El gráfico compuesto muestra que la mayoría de las participaciones olímpicas han ocurrido en los Juegos de Verano, con un crecimiento progresivo a lo largo del tiempo y una mayor frecuencia en eventos populares como atletismo y natación. La distribución de medallas evidencia una gran proporción de atletas sin premio, y una menor cantidad de oros, lo que sugiere alta competencia. Al combinar estas visualizaciones, se obtiene una vista general del desarrollo histórico, la concentración de disciplinas y la estructura del rendimiento olímpico.
